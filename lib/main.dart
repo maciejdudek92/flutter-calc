@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 void main() => runApp(const MyApp());
 
@@ -32,120 +33,140 @@ class _CalcAppState extends State<CalcApp> {
 
   List<Map> buttons = [
     {
+      "isOperator": true,
       "title": "AC",
       "selected": false,
-      "color": Colors.redAccent[700],
+      "color": Colors.orange[900],
       "textColor": Colors.white
     },
     {
+      "isOperator": true,
       "title": "+/-",
       "selected": false,
       "color": Colors.grey[800],
       "textColor": Colors.white
     },
     {
+      "isOperator": true,
       "title": "%",
       "selected": false,
       "color": Colors.grey[800],
       "textColor": Colors.white
     },
     {
+      "isOperator": true,
       "title": "/",
       "selected": false,
       "color": Colors.grey[800],
       "textColor": Colors.white
     },
     {
+      "isOperator": false,
       "title": "7",
       "selected": false,
       "color": Colors.grey[400],
       "textColor": Colors.black
     },
     {
+      "isOperator": false,
       "title": "8",
       "selected": false,
       "color": Colors.grey[400],
       "textColor": Colors.black
     },
     {
+      "isOperator": false,
       "title": "9",
       "selected": false,
       "color": Colors.grey[400],
       "textColor": Colors.black
     },
     {
+      "isOperator": true,
       "title": "x",
       "selected": false,
       "color": Colors.grey[800],
       "textColor": Colors.white
     },
     {
+      "isOperator": false,
       "title": "4",
       "selected": false,
       "color": Colors.grey[400],
       "textColor": Colors.black
     },
     {
+      "isOperator": false,
       "title": "5",
       "selected": false,
       "color": Colors.grey[400],
       "textColor": Colors.black
     },
     {
+      "isOperator": false,
       "title": "6",
       "selected": false,
       "color": Colors.grey[400],
       "textColor": Colors.black
     },
     {
+      "isOperator": true,
       "title": "-",
       "selected": false,
       "color": Colors.grey[800],
       "textColor": Colors.white
     },
     {
+      "isOperator": false,
       "title": "1",
       "selected": false,
       "color": Colors.grey[400],
       "textColor": Colors.black
     },
     {
+      "isOperator": false,
       "title": "2",
       "selected": false,
       "color": Colors.grey[400],
       "textColor": Colors.black
     },
     {
+      "isOperator": false,
       "title": "3",
       "selected": false,
       "color": Colors.grey[400],
       "textColor": Colors.black
     },
     {
+      "isOperator": true,
       "title": "+",
       "selected": false,
       "color": Colors.grey[800],
       "textColor": Colors.white
     },
     {
+      "isOperator": true,
       "title": "DEL",
       "selected": false,
-      "color": Colors.redAccent[700],
+      "color": Colors.red[900],
       "textColor": Colors.white
     },
     {
+      "isOperator": false,
       "title": "0",
       "selected": false,
       "color": Colors.grey[400],
       "textColor": Colors.black
     },
     {
+      "isOperator": false,
       "title": ".",
       "selected": false,
       "color": Colors.grey[400],
       "textColor": Colors.black
     },
     {
+      "isOperator": true,
       "title": "=",
       "selected": false,
       "color": Colors.grey[800],
@@ -166,6 +187,7 @@ class _CalcAppState extends State<CalcApp> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 color: Colors.green[900],
+                // ignore: prefer_const_literals_to_create_immutables
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black26,
@@ -173,39 +195,35 @@ class _CalcAppState extends State<CalcApp> {
                     spreadRadius: 5,
                     offset: Offset(0, 0),
                   ),
-                  // BoxShadow(
-                  //   color: Colors.white60,
-                  //   blurRadius: 5,
-                  //   spreadRadius: 1,
-                  //   offset: Offset(-4, -4),
-                  // ),
                 ],
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.all(10),
                     alignment: Alignment.topLeft,
-                    child: Text(
+                    child: AutoSizeText(
                       userEquation,
                       style: GoogleFonts.vt323(
                         textStyle: TextStyle(
                           fontSize: 30,
                         ),
                       ),
+                      maxLines: 2,
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.all(10),
                     alignment: Alignment.bottomRight,
-                    child: Text(
+                    child: AutoSizeText(
                       equationResult,
                       style: GoogleFonts.vt323(
                         textStyle: TextStyle(
                           fontSize: 80,
                         ),
                       ),
+                      maxLines: 1,
                     ),
                   ),
                 ],
@@ -217,6 +235,7 @@ class _CalcAppState extends State<CalcApp> {
                 child: Center(
                   child: Container(
                     child: GridView.builder(
+                      primary: false,
                       itemCount: buttons.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 4),
@@ -239,7 +258,22 @@ class _CalcAppState extends State<CalcApp> {
                               } else if (buttons[index]['title'] == "=") {
                                 equalPressed();
                               } else {
-                                userEquation += buttons[index]['title'];
+                                if (userEquation.length == 0) {
+                                  if (!buttons[index]['isOperator']) {
+                                    userEquation += buttons[index]['title'];
+                                  }
+                                } else {
+                                  if (double.tryParse(userEquation[
+                                          userEquation.length - 1]) !=
+                                      null) {
+                                    userEquation += buttons[index]['title'];
+                                  } else if (double.tryParse(userEquation[
+                                              userEquation.length - 1]) ==
+                                          null &&
+                                      !buttons[index]['isOperator']) {
+                                    userEquation += buttons[index]['title'];
+                                  }
+                                }
                               }
                             });
                           },
@@ -304,9 +338,9 @@ class _CalcAppState extends State<CalcApp> {
       return [
         BoxShadow(
           color: Colors.black54,
-          blurRadius: 5,
-          spreadRadius: 1,
-          offset: Offset(12, 12),
+          blurRadius: 10,
+          spreadRadius: 0,
+          offset: Offset(5, 5),
         ),
       ];
     } else {
