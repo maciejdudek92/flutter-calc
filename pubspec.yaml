@@ -30,7 +30,6 @@ dependencies:
   flutter:
     sdk: flutter
   math_expressions: ^2.3.1
-  morphable_shape: ^1.6.4
   google_fonts: ^3.0.1
 
 
